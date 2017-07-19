@@ -6,7 +6,7 @@
         private $id;
         private $copies;
 
-        function __construct($title, $content, $id = null, $copies = 1)
+        function __construct($title, $content, $id = null, $copies = 3)
         {
             $this->title = $title;
             $this->content = $content;
@@ -74,7 +74,7 @@
 
         function save()
         {
-            $executed = $GLOBALS['DB']->exec("INSERT INTO books (title, content) VALUES ('{$this->getTitle()}', '{$this->getContent()}');");
+            $executed = $GLOBALS['DB']->exec("INSERT INTO books (title, content, copies) VALUES ('{$this->getTitle()}', '{$this->getContent()}', {$this->getCopies()});");
             if ($executed) {
                 $this->id = $GLOBALS['DB']->lastInsertId();
                 return true;
@@ -104,6 +104,7 @@
 
         static function find($search_id)
         {
+            $new_book = null;
             $returned_books = $GLOBALS['DB']->prepare("SELECT * FROM books WHERE id = :id;");
             $returned_books->bindParam(':id', $search_id, PDO::PARAM_STR);
             $returned_books->execute();
@@ -139,11 +140,31 @@
                 return false;
             }
         }
-// ><><><needs test>><><><<>>><><><><><><><><><><><><><><><><
-        function addCopies($new_copy_count)
+
+        static function getOverdueBooks()
         {
-            for ($x=$new_copy_count; $x>0; --$x){
-            $GLOBALS['DB']->exec("INSERT INTO copies (book_id, patron_id) VALUES ('{$this->getId()}', '1');");
+            $returned_books = $GLOBALS['DB']->query("SELECT books.* FROM patrons JOIN copies ON (copies.book_id = books.id) JOIN books ON (patrons.id = copies.patron_id) WHERE copies.due_date <= {date('Y-m-d')};");
+            var_dump($returned_books);
+            $books = array();
+            foreach($returned_books as $book) {
+                $title = $book['title'];
+                $content = $book['content'];
+                $id = $book['id'];
+                $copies = $book['copies'];
+                $new_book = new Book($title, $content, $id, $copies);
+                array_push($books, $new_book);
+            }
+            return $books;
+        }
+
+        function setDueDate($new_due_date)
+        {
+            $executed = $GLOBALS['DB']->exec("UPDATE copies SET due_date = '{$new_due_date}' WHERE id = {$this->getId()};");
+            if ($executed) {
+                $this->setContent($new_content);
+                return true;
+            } else {
+                return false;
             }
         }
     }

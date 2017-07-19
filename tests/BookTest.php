@@ -49,7 +49,7 @@
 
             $result = $new_book->getCopies();
 
-            $this->assertEquals(1, $result);
+            $this->assertEquals(3, $result);
         }
 
         function testSetCopies()
@@ -178,6 +178,26 @@
             $result = $new_book->getAuthors();
 
             $this->assertEquals([$new_author], $result);
+        }
+
+        function testGetOverdueBooks()
+        {
+            $title = "Two brothers";
+            $content = "Fighting the mexican armada. And there are angry grandmas with guns... and they cross... attack.";
+            $newer_book = new Book($title, $content);
+            $newer_book->save();
+
+            $name = "Osiris";
+            $new_patron = new Patron($name);
+            $new_patron->save();
+            $new_patron->checkoutBook($newer_book->getId());
+
+            $new_due_date = date("Y-m-d", strtotime('-1 week'));
+            $GLOBALS['DB']->exec("UPDATE copies SET due_date = '{$new_due_date}' WHERE patron_id = {$new_patron->getId()};");
+
+            $result = Book::getOverdueBooks();
+
+            $this->assertEquals([$newer_book], $result);
         }
     }
 
