@@ -143,8 +143,8 @@
 
         static function getOverdueBooks()
         {
-            $returned_books = $GLOBALS['DB']->query("SELECT books.* FROM patrons JOIN copies ON (copies.book_id = books.id) JOIN books ON (patrons.id = copies.patron_id) WHERE copies.due_date <= {date('Y-m-d')};");
-            var_dump($returned_books);
+            $current_date = date('Y-m-d');
+            $returned_books = $GLOBALS['DB']->query("SELECT books.* FROM patrons JOIN copies ON (copies.book_id = books.id) JOIN books ON (patrons.id = copies.patron_id) WHERE copies.due_date <= '2017-12-12';");
             $books = array();
             foreach($returned_books as $book) {
                 $title = $book['title'];
