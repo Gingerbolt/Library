@@ -41,6 +41,29 @@
             $this->assertEquals($result, $content);
         }
 
+        function testGetCopies()
+        {
+            $title = "Hatchet";
+            $content = "Boy has a dope ass axe and does hella shit with it";
+            $new_book = new Book($title, $content);
+
+            $result = $new_book->getCopies();
+
+            $this->assertEquals(1, $result);
+        }
+
+        function testSetCopies()
+        {
+            $title = "Shmatchet";
+            $content = "Boy has a sweet ass axe and does hecka shit with it";
+            $new_book = new Book($title, $content);
+            $new_copy_count = 3;
+
+            $new_book->setCopies($new_copy_count);
+            $result = $new_book->getCopies();
+            $this->assertEquals($new_copy_count, $result);
+        }
+
         function testSave()
         {
             $title = "Ricky Rogers Runs";

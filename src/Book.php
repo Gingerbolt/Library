@@ -4,12 +4,24 @@
         private $title;
         private $content;
         private $id;
+        private $copies;
 
-        function __construct($title, $content, $id = null)
+        function __construct($title, $content, $id = null, $copies = 1)
         {
             $this->title = $title;
             $this->content = $content;
+            $this->copies = $copies;
             $this->id = $id;
+        }
+
+        function getCopies()
+        {
+            return $this->copies;
+        }
+
+        function setCopies($new_copy_count)
+        {
+            $this->copies = $new_copy_count;
         }
 
         function getTitle()
@@ -125,6 +137,13 @@
                 return true;
             } else {
                 return false;
+            }
+        }
+// ><><><needs test>><><><<>>><><><><><><><><><><><><><><><><
+        function addCopies($new_copy_count)
+        {
+            for ($x=$new_copy_count; $x>0; --$x){
+            $GLOBALS['DB']->exec("INSERT INTO copies (book_id, patron_id) VALUES ('{$this->getId()}', '1');");
             }
         }
     }
