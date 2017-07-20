@@ -1,0 +1,50 @@
+<html>
+  <head>
+    <title>Library</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    </head>
+  </head>
+  <body>
+      <div class="container">
+    <h1>Books</h1>
+
+    {% if books is not empty %}
+      <p>Here is the catalog of books:</p>
+      <ul>
+          {% for book in books %}
+                  <li><a href="/bookinfo/{{ book.getId }}">{{ book.getTitle }}</a></li>
+                  <form name="delete {{book.getTitle}}" action="/delete_book/{{ book.getId }}" method="post">
+                      <input type="hidden" name="_method" value="delete">
+                      <button name="delete {{book.getTitle}}" type='submit'>Delete this book</button>
+                  </form>
+          {% endfor %}
+      </ul>
+    {% endif %}
+
+    <form action='/administration' method='post'>
+      <label for='title'>Book Title</label>
+      <input id='title' name='title' type='text'>
+      <label for='content'>Content</label>
+      <input id='content' name='content' type='text'>
+      <label for='author'>Author(s) separated by commas</label>
+      <input id='author' name='author' type='text'>
+      <button type='submit'>Add book</button>
+
+    </form>
+
+
+
+    <form action='/find_book_by_author' method='post'>
+        <label for="search_author">Search for book by author</label>
+        <select name='search_author'>
+            {% for openauthor in authors_list %}
+            <option value="{{ openauthor.getId }}">{{ openauthor.getName }}</option>
+            {% endfor %}
+        </select>
+        <button type='submit'>Search</button>
+    </form>
+
+    <p><a href='/'>Home</a></p>
+    </div>
+  </body>
+</html>

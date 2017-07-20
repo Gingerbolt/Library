@@ -1,0 +1,56 @@
+<html>
+  <head>
+    <title>Library</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  </head>
+  <body>
+      <div class="container">
+    <h1>Selected book:</h1>
+      <ul>
+          <li><strong><font size="20">{{ book.getTitle }}</font></strong></li>
+          <ul>
+                {% if authors is not empty %}
+                      {% for author in authors %}
+                          <li>{{ author.getName }}</li>
+                          <form name='delete_author' action='/delete_book_author/{{ book.getId }}' method= 'post'>
+                        <input type="hidden" name="_method" value="delete">
+                          <input name="author_id" type="hidden" value="{{ author.getId }}">
+                          <button name='delete_author' type='submit'> Remove this author from the book </button>
+                          </form>
+                      {% endfor %}
+                {% endif %}
+                <li>{{ book.getContent }}</li>
+          </ul>
+      </ul>
+
+      <h2>Edit your book information</h2>
+      <form action='/edit_book_title/{{ book.getId }}' method='post'>
+          <input name="_method" type="hidden" value="patch">
+
+          <label for="title_edit">New Title</label>
+          <input type="text" name="title_edit" id="title_edit">
+
+          <button type='submit'>Replace old title</button>
+      </form>
+
+      <form action='/edit_book_content/{{ book.getId }}' method='post'>
+          <input name="_method" type="hidden" value="patch">
+          <label for="content_edit">New Content</label>
+          <input type="text" name="content_edit" id="content_edit">
+          <button type='submit'>Replace old content</button>
+      </form>
+
+      <form action='/add_book_author/{{ book.getId }}' method='post'>
+          <select name='new_author'>
+              {% for openauthor in authors_list %}
+              <option value="{{ openauthor.getId }}">{{ openauthor.getName }}</option>
+              {% endfor %}
+          </select>
+      <button type='submit'>Add another author</button>
+      </form>
+      <p> <a href='/administration'>Return to book list</a></p>
+      <p><a href='/'>Home</a></p>
+
+    </div>
+  </body>
+</html>

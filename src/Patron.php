@@ -1,6 +1,6 @@
 <?php
 
-    // require_once "src/Book.php";
+    require_once "src/Book.php";
 
     class Patron
     {

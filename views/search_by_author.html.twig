@@ -1,0 +1,29 @@
+<html>
+  <head>
+    <title>Library</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    </head>
+  </head>
+  <body>
+      <div class="container">
+          <h1>{{ author.getName() }}</h1>
+
+    {% if books is not empty %}
+      <h1>Books by author:</h1>
+      <ul>
+          {% for book in books %}
+                  <li><a href="/bookinfo/{{ book.getId }}">{{ book.getTitle }}</a></li>
+                  <form name="delete {{book.getTitle}}" action="/delete_book/{{ book.getId }}" method="post">
+                      <input type="hidden" name="_method" value="delete">
+                      <button name="delete {{book.getTitle}}" type='submit'>Delete this book</button>
+                  </form>
+          {% endfor %}
+      </ul>
+      {% else %}
+      <h1> No books found </h1>
+    {% endif %}
+    <p> <a href='/administration'>Return to book list</a></p>
+    <p><a href='/'>Home</a></p>
+    </div>
+  </body>
+</html>

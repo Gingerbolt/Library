@@ -144,16 +144,20 @@
         static function getOverdueBooks()
         {
             $current_date = date('Y-m-d');
-            $returned_books = $GLOBALS['DB']->query("SELECT books.* FROM patrons JOIN copies ON (copies.book_id = books.id) JOIN books ON (patrons.id = copies.patron_id) WHERE copies.due_date <= '2017-12-12';");
+            $returned_books = $GLOBALS['DB']->query("SELECT * FROM books AS b
+              JOIN copies AS c on c.book_id = b.id
+              JOIN patrons AS p on p.id = c.patron_id WHERE c.due_date <= '2017-12-12';");
             $books = array();
             foreach($returned_books as $book) {
                 $title = $book['title'];
                 $content = $book['content'];
-                $id = $book['id'];
+                $id = $book['book_id'];
                 $copies = $book['copies'];
                 $new_book = new Book($title, $content, $id, $copies);
                 array_push($books, $new_book);
+
             }
+
             return $books;
         }
 
@@ -166,6 +170,17 @@
             } else {
                 return false;
             }
+        }
+
+        function deleteBook()
+        {
+            $GLOBALS['DB']->exec("DELETE FROM books WHERE id = {$this->getId()};");
+            $GLOBALS['DB']->exec("DELETE FROM authorship WHERE book_id = {$this->getId()};");
+        }
+
+        function removeAuthor($author_id)
+        {
+            $GLOBALS['DB']->exec("DELETE FROM authorship WHERE book_id = {$this->getId()} AND author_id = {$author_id};");
         }
     }
 

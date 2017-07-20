@@ -1,5 +1,4 @@
 <?php
-    $website = require_once __DIR__."/vendor/autoload.php";
-    $webiste->run();
-
- ?>
+    $website = require_once __DIR__.'/../app/app.php';
+    $website->run();
+?>
